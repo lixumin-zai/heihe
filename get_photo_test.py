@@ -11,7 +11,8 @@ from requests_toolbelt import MultipartEncoder
 # API地址
 url = "http://192.168.10.113:8888/photo"
 # 图片地址
-file_path = 'C:/Users/Administrator/Desktop/23.png'
+# file_path = 'C:/Users/Administrator/Desktop/23.png'
+file_path = 'C:/Users/Administrator/Desktop/1.jpg'
 # 图片名
 file_name = file_path.split('/')[-1]
 # 二进制打开图片

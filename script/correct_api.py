@@ -135,6 +135,7 @@ def call_api(text):
     for err_type in correct_text:   # 获取全部错误
         for err0 in correct_text[err_type]:
             err.append(err0)
+    err_num = len(err)
     err = sorted(err, key=lambda i: i[0], reverse=True)  # 以错误位置倒叙排序错误
     posde = 0
     for temp in err:
@@ -143,7 +144,7 @@ def call_api(text):
             Text2 = Text[int(temp[0]) + len(temp[1]):]
             Text = Text1 + temp[2] + Text2
             posde = int(temp[0])
-    return Text
+    return Text,err_num
 
 
 if __name__ == '__main__':

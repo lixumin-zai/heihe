@@ -22,45 +22,55 @@ def hello_world():
 # ---------------------------------------------------------------
 @app.route('/photo', methods=['POST'])
 def get_photo():
-    # -----------------参数待定-----------------------
-    # 接收参数username
-    username = request.values.get('username')
-    # 接收参数page
-    page = request.values.get('page')
-    print(username)
-    print(page)
-    # request.
-    # -----------------------------------------------------
-    # 接收图片文件
-    upload_file = request.files['file']
-    # print(type(upload_file.stream.read()))  ##<class 'bytes'>
-    # 获取图片名
-    file_name = upload_file.filename.encode('utf-8').decode('unicode_escape')
-    # 文件保存目录（桌面）
-    # file_path = r'C:/Users/Administrator/Desktop/flask/'
-    if upload_file:
-        # -----------------------测试部分-----------------------
-        # 地址拼接
-        # file_paths = os.path.join(file_path, file_name)
-        # 保存接收的图片到桌面
-        # upload_file.save(file_paths)
-        # 随便打开一张其他图片作为结果返回，
+    try:
+        # -----------------参数待定-----------------------
+        # 接收参数username
+        username = request.values.get('username')
+        # 接收参数page
+        page = request.values.get('page')
+        # print(username)
+        # print(page)
+        # request.
         # -----------------------------------------------------
-        # ----------------------- 调用模型-----------------------
-        bytes_img = upload_file.stream.read()
-        text = ocr_api.call_api(bytes_img)
-        text.encode('utf-8').decode('unicode_escape')
-        correct = correct_api.call_api(text)
-        # -----------------------------------------------------
-        # ----------------------返回参数-----------------------
-        res = jsonify({
-            'file_name': file_name,
-            'username': username,
-            'page': page,
-            'text': text,
-            'correct': correct
+        # 接收图片文件
+        upload_file = request.files['file']
+        # print(type(upload_file.stream.read()))  ##<class 'bytes'>
+        # 获取图片名
+        file_name = upload_file.filename.encode('utf-8').decode('unicode_escape')
+        # 文件保存目录（桌面）
+        # file_path = r'C:/Users/Administrator/Desktop/flask/'
+        if upload_file:
+            # -----------------------测试部分-----------------------
+            # 地址拼接
+            # file_paths = os.path.join(file_path, file_name)
+            # 保存接收的图片到桌面
+            # upload_file.save(file_paths)
+            # 随便打开一张其他图片作为结果返回，
+            # -----------------------------------------------------
+            # ----------------------- 调用模型-----------------------
+            bytes_img = upload_file.stream.read()
+            text, title, section = ocr_api.call_api(bytes_img)
+            text.encode('utf-8').decode('unicode_escape')
+            correct, err_num = correct_api.call_api(text)
+
+            # -----------------------------------------------------
+            # ----------------------返回参数-----------------------
+            res = jsonify({
+                'file_name': file_name,
+                'username': username,
+                'page': page,
+                'text': text,
+                'correct': correct,
+                'title': title,
+                'section': section,
+                'err_num': err_num
+            })
+            return res
+    except:
+        return jsonify({
+            'error': "图片识别出错，请调整图片大小参数",
         })
-        return res
+
 
 
 ##############################################################################

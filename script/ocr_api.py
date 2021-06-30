@@ -66,13 +66,28 @@ def call_api(imgfile):
     # print(type(text))
 
     text0 = ''
-    for i in text["data"]["block"][0]['line']:
+    for i in text["data"]["block"][0]['line'][1:]:
         # print(i['word'][0]["content"])
         text0 = text0 + i['word'][0]["content"]
     # print(text0)
-    return text0
+
+    title = text["data"]["block"][0]['line'][0]['word'][0]["content"]
+    section = []
+    text1 = ''
+    max_line = len(text["data"]["block"][0]['line'][1]['word'][0]["content"])
+    # print(max_line)
+    for i in text["data"]["block"][0]['line'][1:]:
+        text1 = text1 + i['word'][0]["content"]
+        # print(len(i['word'][0]["content"]))
+        if len(i['word'][0]["content"]) < max_line:
+            section.append(text1)
+            text1 = ''
+    return text0, title, section
 
 if __name__ == "__main__":
     with open("../23.png", 'rb') as f:
         imgfile = f.read()
-    call_api(imgfile)
+    text0, title, section = call_api(imgfile)
+    # print(text0)
+    # print("title:"+title)
+    # print(section)
